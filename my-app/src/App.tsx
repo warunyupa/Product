@@ -28,7 +28,7 @@ export function ShowProduct() {
   }
 
   const ShowProd = products_del.map((aprod, index) => (
-    <div className="col-sm-4   ">
+    <div className="col-sm-4  ">
       <div className="card" key={index} >
         <img src={aprod.imageUrl} className="card-img-top" alt="..." />
         <div className="card-body">
