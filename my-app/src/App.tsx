@@ -10,8 +10,8 @@ import "./App.css";
 export function Edit() {
   return (
     <>
-      <button type="button" className="btn btn-primary">
-        Edit
+      <button type="button" className="btn btn-primary btn-sm">
+        edit
       </button>
     </>
   );
@@ -28,26 +28,28 @@ export function ShowProduct() {
   }
 
   const ShowProd = products_del.map((aprod, index) => (
-    <div className="container">
-      <div className="card" style={{width: "2rem;"}}  key={index} >
+    <div className="col-sm-4   ">
+      <div className="card" key={index} >
         <img src={aprod.imageUrl} className="card-img-top" alt="..." />
         <div className="card-body">
           <h5 className="card-title">{aprod.name}</h5>
           <p className="card-text">{aprod.price}</p>
           <Edit />
-
           <button type="button"
-            className="btn btn-danger"
+            className="btn btn-danger btn-sm"
             onClick={() => deleteByValue(aprod)}>
-            Delete
+            delete
           </button>
         </div>
       </div>
     </div>
+
   ));
   return (
-    <div>
-      {ShowProd}
+    <div className="container text-center" >
+      <div className="row g-4">
+        {ShowProd}
+      </div>
     </div>
   );
 }
