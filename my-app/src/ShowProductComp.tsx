@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import products from './data';
 import {Edit} from './EditComp';
+import { showDetail } from './DetailComp';
 
 export function ShowProduct() {
   const [products_del, setProd_del] = useState(products)

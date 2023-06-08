@@ -1,7 +1,5 @@
-import { useState } from 'react';
-import products from './data';
 import {Add} from './AddComp';
-import {ShowProduct} from './ShowProduct';
+import {ShowProduct} from './ShowProductComp';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
