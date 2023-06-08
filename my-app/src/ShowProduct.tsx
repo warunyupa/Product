@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
+import './AddComp.css'
 
 type Product = {
   name: string,
@@ -11,6 +12,16 @@ type Product = {
 }
 
 //----functions---//
+export function AddProduct(){
+  type Product = typeof initProd;
+  const initProd = { name: '', detail: '', imageUrl: '', price: 0 }
+  const [newProduct, setNewProduct] = useState<Product>(initProd)
+
+  alert("add Product "+newProduct.name + 'to List')
+  console.log(newProduct)
+  products.push(newProduct)
+  console.log('in AddProduct function')
+}
 export function ShowProduct() {
   const intialValues = [
     {
@@ -38,29 +49,69 @@ export function ShowProduct() {
 
   const [products, setProducts] = useState<Product[]>(intialValues);
 
-  const deleteProduct = {
-      
-  }
+  const deleteProduct = (index: number) => {
+    setProducts((oldValues) => {
+      const updatedProducts = [...oldValues];
+      updatedProducts.splice(index, 1);
+      return updatedProducts;
+    });
+  };
+  
   return (
     // <DetailComp
     // show= {true}
     // />
     <>
-      <div className="container text-center" >
-        <div className="row g-4">
+      <div className='Add-container'>
+        <div className="row mb-3 ">
+          <label className="col-sm-2 col-form-label col-form-label-sm">Name</label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control form-control-sm" placeholder="product name" value={newProduct.name} onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }} />
+          </div>
+          <label className="col-sm-2 col-form-label ">Detail</label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control form-control-sm" placeholder="detail" value={newProduct.detail} onChange={event => { setNewProduct({ ...newProduct, detail: event.target.value }) }} />
+          </div>
+          <label className="col-sm-2 col-form-label col-form-label-sm">Image</label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control form-control-sm" placeholder="image" value={newProduct.imageUrl} onChange={event => { setNewProduct({ ...newProduct, imageUrl: event.target.value }) }} />
+          </div>
 
-          {products.map((product, index) => (
-            <div className="col-sm-4">
-              <div className="card" key={index} >
-                <img src={product.imageUrl} className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text">{product.price}</p>
+          <label className="col-sm-2 col-form-label col-form-label-sm" >Price</label>
+          <div className="col-sm-10">
+            <input type="text" className="form-control form-control-sm" placeholder="price" value={newProduct.price} onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }} />
+          </div>
+        </div>
+        <button type="button" className="btn btn-success btn-sm" onClick={() => AddProduct()} >
+          Add
+        </button>
+      </div>
+
+      <div className='ListProducts-container'>
+        <div className="container text-center" >
+          <div className="row g-4">
+            {products.map((product, index) => (
+              <div className="col-sm-4">
+                <div className="card" key={index} >
+                  <img src={product.imageUrl} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title">{product.name}</h5>
+                    <p className="card-text">{product.price}</p>
+                    <button type="button"
+                      className="btn btn-primary btn-sm"
+                    >
+                      Edit
+                    </button>
+                    <button type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => deleteProduct(index)}>
+                      delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-
+            ))}
+          </div>
         </div>
       </div>
     </>
