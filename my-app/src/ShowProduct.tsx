@@ -38,6 +38,9 @@ export function ShowProduct() {
 
   const [products, setProducts] = useState<Product[]>(intialValues);
 
+  const deleteProduct = {
+      
+  }
   return (
     // <DetailComp
     // show= {true}
