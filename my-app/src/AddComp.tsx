@@ -3,12 +3,10 @@ import './AddComp.css';
 import './data';
 import products from './data';
 
-function Add() {
+export function Add() {
    type Product = typeof initProd;
-   const initProd = {name:'',detail:'',imageUrl:'',price:null}
+   const initProd = {name:'',detail:'',imageUrl:'',price:0}
    const [newProduct, setNewProduct] = useState<Product>(initProd)
-
-  //  const [newProd,setNewProd] = useState<{name:string,detail:string,imageUrl:string,price:number}>({name:"",detail:"",imageUrl:"",price:0})
    
    const AddProduct = ()=> {
     alert("add Prodcut "+ newProduct.name+' to List ')
@@ -44,5 +42,3 @@ function Add() {
       </>
     );
   }
-
-  export default Add;
