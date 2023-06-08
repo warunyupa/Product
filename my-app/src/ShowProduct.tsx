@@ -12,16 +12,6 @@ type Product = {
 }
 
 //----functions---//
-export function AddProduct(){
-  type Product = typeof initProd;
-  const initProd = { name: '', detail: '', imageUrl: '', price: 0 }
-  const [newProduct, setNewProduct] = useState<Product>(initProd)
-
-  alert("add Product "+newProduct.name + 'to List')
-  console.log(newProduct)
-  products.push(newProduct)
-  console.log('in AddProduct function')
-}
 export function ShowProduct() {
   const intialValues = [
     {
@@ -48,6 +38,16 @@ export function ShowProduct() {
   ]
 
   const [products, setProducts] = useState<Product[]>(intialValues);
+
+  type Product = typeof initProd;
+  const initProd = { name: '', detail: '', imageUrl: '', price: 0 }
+  const [newProduct, setNewProduct] = useState<Product>(initProd)
+
+  const addProduct = ()=> {
+    products.push(newProduct)
+    console.log(newProduct)
+    setNewProduct(initProd)
+  }
 
   const deleteProduct = (index: number) => {
     setProducts((oldValues) => {
@@ -82,7 +82,7 @@ export function ShowProduct() {
             <input type="text" className="form-control form-control-sm" placeholder="price" value={newProduct.price} onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }} />
           </div>
         </div>
-        <button type="button" className="btn btn-success btn-sm" onClick={() => AddProduct()} >
+        <button type="button" className="btn btn-success btn-sm" onClick={() => addProduct()} >
           Add
         </button>
       </div>
@@ -91,7 +91,7 @@ export function ShowProduct() {
         <div className="container text-center" >
           <div className="row g-4">
             {products.map((product, index) => (
-              <div className="col-sm-4">
+              <div className="col-md-4">
                 <div className="card" key={index} >
                   <img src={product.imageUrl} className="card-img-top" alt="..." />
                   <div className="card-body">
