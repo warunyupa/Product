@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
 import './addProduct.css'
 import './textHeader.css'
 import './showProducts.css'
@@ -61,16 +62,24 @@ export function ShowProduct() {
     });
   };
 
+  {/*Flag to show/close modal */}
   const [show, setShow] = useState(false);
   const [indexProduct,setIndexProduct] = useState<number>()
 
-  const handleToggleShow = () => {
-    setShow(!show);
+  const handleOpen = (index:number) => {
+    setIndexProduct(index)
+    setShow(true);
     if(show)
-      console.log('open')
+      console.log('open'+ 'index = '+indexProduct)
     else
       console.log('close')
-
+  };
+  const handleClose = () => {
+    setShow(false)
+    if(show)
+      console.log('open'+ 'index = '+indexProduct)
+    else
+      console.log('close')
   };
 
   return (
@@ -112,7 +121,7 @@ export function ShowProduct() {
                 <div className="card h-100 d-flex" >
                   <img src={product.imageUrl} className="card-img-top" alt="product image" />
                   <div className="card-body d-flex flex-column">
-                    <button onClick={handleToggleShow}><h5 className="card-title" indexProduct = {index}>{product.name}</h5></button>
+                    <button className="product-btn" onClick={()=> handleOpen(index)}><h5 className="card-title">{product.name}</h5></button>
                     <p className="card-text">price: {product.price}</p>
                     <div className="mt-auto">
                       <button type="button"
@@ -135,16 +144,36 @@ export function ShowProduct() {
       </div>
 
       {/*show Detail*/}
-      <div onClick={handleToggleShow} className="overlay" />
-        <Modal show={show} onHide={handleToggleShow}>
-          <Modal.Header closeButton />
-          <Row>
-              <Col xs={6}>
-                <img src={product.imageUrl} className="card-img-top" alt="product image" />
-              </Col>
-              <Col xs={6}>xs=6</Col>
-          </Row>
-        </Modal>
+      {show && indexProduct !== undefined && (
+        <div className="overlay">
+          <Modal size="lg" show={show} onHide={handleClose} >
+            <Modal.Header closeButton >
+              <Modal.Title>{products[indexProduct].name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col xs={6}>
+                  <img src={products[indexProduct].imageUrl} className="card-img-top" alt="product image" />
+                </Col>
+                <Col xs={6}>
+                  <Table striped="columns">
+                    <tbody>
+                      <tr>
+                        <th>Detail</th>
+                        <td>{products[indexProduct].detail}</td>
+                      </tr>
+                      <tr>
+                        <th>Price</th>
+                        <td>{products[indexProduct].price}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </Col>
+              </Row>
+            </Modal.Body>
+          </Modal>
+        </div>
+      )}
     </>
   );
 }
