@@ -1,12 +1,12 @@
 import ShowProduct from './ShowProduct';
-import {HeaderComp} from './HeaderComp';
+import {Header} from './Header';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
   return (
     <>
-      <HeaderComp/>
+      <Header/>
       <ShowProduct />
     </>
   );
