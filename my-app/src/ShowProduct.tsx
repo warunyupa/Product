@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 import './addProduct.css'
 import './textHeader.css'
 import './showProducts.css'
@@ -42,16 +43,39 @@ export function ShowProduct() {
     },
   ]
 
+  {/* set initial value */ }
   const [products, setProducts] = useState<Product[]>(intialValues);
 
-  type Product = typeof initProd;
+  {/*set varible for Addding new Product*/ }
   const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
   const [newProduct, setNewProduct] = useState<Product>(initProd);
 
+  {/*Flag to show/close modal */ }
+  const [show, setShow] = useState(false);
+  const [detail, setDetail] = useState(false);
+  const [indexProduct, setIndexProduct] = useState<number>()
+
+  {/*set Duplicate Products for Edit a product */ }
+  const [dupProducts, setDupProducts] = useState<Product>(initProd);
+
+  {/*default image */}
+  const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
+
+  {/*error message */}
+  const [message,setMessage] = useState('')
+
   const handleAddProduct = () => {
-    products.push(newProduct)
-    console.log(newProduct)
-    setNewProduct(initProd)
+    if (newProduct.imageUrl == '') {
+      newProduct.imageUrl = defaultImage;
+    }
+    if (newProduct.name == '' ){
+      alert('Please enter name product')
+    }
+    else{
+      products.push(newProduct)
+      console.log(newProduct)
+      setNewProduct(initProd)
+    }
   };
 
   const deleteProduct = (index: number) => {
@@ -62,37 +86,49 @@ export function ShowProduct() {
     });
   };
 
-  {/*Flag to show/close modal */}
-  const [show, setShow] = useState(false);
-  const [indexProduct,setIndexProduct] = useState<number>()
-
-  const handleOpen = (index:number) => {
+  const handleOpen = (index: number) => {
     setIndexProduct(index)
     setShow(true);
-    if(show)
-      console.log('open'+ 'index = '+indexProduct)
-    else
-      console.log('close')
+    if (show) {
+      setShow(true)
+      console.log('open index = ' + indexProduct)
+    }
   };
   const handleClose = () => {
     setShow(false)
-    if(show)
-      console.log('open'+ 'index = '+indexProduct)
-    else
-      console.log('close')
+    console.log('close index = ' + indexProduct)
   };
+
+  const handleEdit = (value: Product) => {
+    setDupProducts(value)
+    console.log(value)
+  }
+  const handleSave = () => {
+    if (dupProducts.imageUrl == '')
+      dupProducts.imageUrl = defaultImage
+
+    if(dupProducts.name ==''){
+      alert('Please enter name product')
+    }
+    else{
+      setProducts((prevProducts) => {
+        const updatedProducts = [...prevProducts];
+        updatedProducts[indexProduct as number] = dupProducts;
+        return updatedProducts;
+      });
+      setShow(false);
+    }
+  }
 
   return (
     <>
-      {/* <ShowDetail show= {true} /> */}
-
       {/*Add Product*/}
       <div className='card Add-container'>
         <h2> New Product </h2>
         <div className="row mb-3 ">
           <label className="col-sm-2 col-form-label ">Name</label>
           <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="product name" value={newProduct.name} onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }} />
+            <input required type="text" className="form-control form-control-sm" placeholder="product name" value={newProduct.name} onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }} />
           </div>
           <label className="col-sm-2 col-form-label ">Detail</label>
           <div className="col-sm-10">
@@ -111,7 +147,7 @@ export function ShowProduct() {
           Add
         </button>
       </div>
-      
+
       {/*Show List of Products */}
       <div className='ListProducts-container'>
         <div className="container text-center" >
@@ -121,11 +157,12 @@ export function ShowProduct() {
                 <div className="card h-100 d-flex" >
                   <img src={product.imageUrl} className="card-img-top" alt="product image" />
                   <div className="card-body d-flex flex-column">
-                    <button className="product-btn" onClick={()=> handleOpen(index)}><h5 className="card-title">{product.name}</h5></button>
+                    <button className="product-btn" onClick={() => { handleOpen(index), setDetail(true) }}><h5 className="card-title">{product.name}</h5></button>
                     <p className="card-text">price: {product.price}</p>
                     <div className="mt-auto">
                       <button type="button"
                         className="btn btn-primary btn-sm"
+                        onClick={() => { handleOpen(index), setDetail(false), handleEdit(products[index]) }}
                       >
                         Edit
                       </button>
@@ -143,8 +180,92 @@ export function ShowProduct() {
         </div>
       </div>
 
+
+      {/*Edit Product */}
+      {show && (!detail) && indexProduct !== undefined && (
+        <div className="overlay">
+          <Modal size="lg" show={show} onHide={handleClose} >
+            <Modal.Header closeButton >
+              <Modal.Title>{products[indexProduct].name}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col xs={6}>
+                  <img src={products[indexProduct].imageUrl} className="card-img-top" alt="product image" />
+                </Col>
+                <Col xs={6}>
+                  <Form>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Name
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          required
+                          type="text"
+                          autoFocus
+                          value={dupProducts.name}
+                          onChange={event => { setDupProducts({ ...dupProducts, name: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Detail
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={dupProducts.detail}
+                          onChange={event => { setDupProducts({ ...dupProducts, detail: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Image Url
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={dupProducts.imageUrl}
+                          onChange={event => { setDupProducts({ ...dupProducts, imageUrl: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Price
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={dupProducts.price}
+                          onChange={event => { setDupProducts({ ...dupProducts, price: Number(event.target.value) }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Cancle
+              </Button>
+              <Button variant="primary" onClick={handleSave}>
+                Save Changes
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      )}
+
       {/*show Detail*/}
-      {show && indexProduct !== undefined && (
+      {show && detail && indexProduct !== undefined && (
         <div className="overlay">
           <Modal size="lg" show={show} onHide={handleClose} >
             <Modal.Header closeButton >
