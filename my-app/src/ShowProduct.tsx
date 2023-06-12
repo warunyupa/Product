@@ -61,8 +61,6 @@ export function ShowProduct() {
   {/*default image */}
   const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
 
-
-
   const handleAddProduct = () => {
     if (newProduct.imageUrl == '') {
       newProduct.imageUrl = defaultImage;
