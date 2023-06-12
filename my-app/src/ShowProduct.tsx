@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -42,77 +41,46 @@ const intialValues = [
 ]
 
 {/* set initial value */ }
-const [products, setProducts] = useState<Product[]>(intialValues);
+const [products, setProducts] = useState<Product>();
 
-{/*set varible for Addding new Product*/ }
-  const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
-  const [newProduct, setNewProduct] = useState<Product>(initProd);
-
-  {/*Flag to show/close modal */ }
-  const [show, setShow] = useState(false);
-  const [detail, setDetail] = useState(false);
-  const [indexProduct, setIndexProduct] = useState<number>()
-
-  {/*set Duplicate Products for Edit a product */ }
-  const [dupProducts, setDupProducts] = useState<Product>(initProd);
-
-  {/*default image */ }
-  const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
 //----functions---//
-export const AddButton = () => {
-    // setNewProduct(props.newProduct)
-    // if (newProduct.imageUrl == '') {
-    //   newProduct.imageUrl = defaultImage;
-    // }
-    // if (newProduct.name == '') {
-    //   alert('Please enter name product')
-    // }
-    // else {
-    //   products.push(newProduct)
-    //   console.log(products)
-    //   setNewProduct(initProd)
-    // }
+// export const AddButton = () => {
+//   setNewProduct(props.newProduct)
+//   if (newProduct.imageUrl == '') {
+//     newProduct.imageUrl = defaultImage;
+//   }
+//   if (newProduct.name == '') {
+//     alert('Please enter name product')
+//   }
+//   else {
+//     products.push(newProduct)
+//     console.log(products)
+//     setNewProduct(initProd)
+//   }
 
-    return(
-      <button >
-        Add
-      </button>
-    )
-};
+//   return (
+//     <button >
+//       Add
+//     </button>
+//   )
+// };
 
 export function ShowProduct() {
 
   {/*set varible for Addding new Product*/ }
-  // const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
-  // const [newProduct, setNewProduct] = useState<Product>(initProd);
+   const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
+   const [newProduct, setNewProduct] = useState<Product>(initProd);
 
-  // {/*Flag to show/close modal */ }
-  // const [show, setShow] = useState(false);
-  // const [detail, setDetail] = useState(false);
-  // const [indexProduct, setIndexProduct] = useState<number>()
+   {/*Flag to show/close modal */ }
+   const [show, setShow] = useState(false);
+   const [detail, setDetail] = useState(false);
+   const [indexProduct, setIndexProduct] = useState<number>()
 
-  // {/*flag to show Add product */ }
-  // const [addModal, seAddModal] = useState(false)
+   {/*set Duplicate Products for Edit a product */ }
+   const [dupProducts, setDupProducts] = useState<Product>(initProd);
 
-  // {/*set Duplicate Products for Edit a product */ }
-  // const [dupProducts, setDupProducts] = useState<Product>(initProd);
-
-  // {/*default image */ }
-  // const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
-
-  // const handleAddProduct = () => {
-  //   if (newProduct.imageUrl == '') {
-  //     newProduct.imageUrl = defaultImage;
-  //   }
-  //   if (newProduct.name == '') {
-  //     alert('Please enter name product')
-  //   }
-  //   else {
-  //     products.push(newProduct)
-  //     console.log(newProduct)
-  //     setNewProduct(initProd)
-  //   }
-  // };
+   {/*default image */ }
+   const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
 
   const deleteProduct = (index: number) => {
     setProducts((oldValues) => {
@@ -133,6 +101,20 @@ export function ShowProduct() {
   const handleClose = () => {
     setShow(false)
     console.log('close index = ' + indexProduct)
+  };
+
+  const handleAddProduct = () => {
+    if (newProduct.imageUrl == '') {
+      newProduct.imageUrl = defaultImage;
+    }
+    if (newProduct.name == '') {
+    alert('Please enter name product')
+    }
+    else {
+     products.push(newProduct)
+      console.log(newProduct)
+      setNewProduct(initProd)
+    }
   };
 
   const handleEdit = (value: Product) => {
@@ -159,8 +141,7 @@ export function ShowProduct() {
   return (
     <>
       {/*Add Product*/}
-
-      {/* <div className='card Add-container'>
+      <div className='card Add-container'>
         <h2> New Product </h2>
         <div className="row mb-3 ">
           <label className="col-sm-2 col-form-label ">Name</label>
@@ -183,7 +164,7 @@ export function ShowProduct() {
         <button type="button" className="btn btn-success btn-sm" onClick={() => handleAddProduct()} >
           Add
         </button>
-      </div> */}
+      </div>
 
       {/*Show List of Products */}
       <div className='ListProducts-container'>
