@@ -58,6 +58,8 @@ export function ShowProduct() {
   {/*set Duplicate Products for Edit a product */ }
   const [dupProducts, setDupProducts] = useState<Product>(initProd);
 
+  const [addModal,setAddModal] = useState(false)
+
   {/*default image */}
   const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
 
@@ -72,6 +74,7 @@ export function ShowProduct() {
       products.push(newProduct)
       console.log(newProduct)
       setNewProduct(initProd)
+      setAddModal(false);
     }
   };
 
@@ -96,6 +99,15 @@ export function ShowProduct() {
     console.log('close index = ' + indexProduct)
   };
 
+  const handleAddModal = ()=>{
+    setAddModal(true);
+    console.log('add modal '+ addModal)
+  }
+  
+  const handleCloseAddModal =()=>{
+    setAddModal(false)
+    setNewProduct(initProd);
+  }
   const handleEdit = (value: Product) => {
     setDupProducts(value)
     console.log(value)
@@ -119,31 +131,91 @@ export function ShowProduct() {
 
   return (
     <>
-      {/*Add Product*/}
-      <div className='card Add-container'>
-        <h2> New Product </h2>
-        <div className="row mb-3 ">
-          <label className="col-sm-2 col-form-label ">Name</label>
-          <div className="col-sm-10">
-            <input required type="text" className="form-control form-control-sm" placeholder="product name" value={newProduct.name} onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label ">Detail</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="detail" value={newProduct.detail} onChange={event => { setNewProduct({ ...newProduct, detail: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label">Image</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="image" value={newProduct.imageUrl} onChange={event => { setNewProduct({ ...newProduct, imageUrl: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label" >Price</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="price" value={newProduct.price} onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }} />
-          </div>
+      {/*Add Product */}
+      <Button className="add-btn" onClick={handleAddModal}>Add new product</Button>
+      {addModal && (
+        <div className="overlay">
+          <Modal size="lg" show={addModal} onHide={handleCloseAddModal} >
+            <Modal.Header closeButton >
+              <Modal.Title>New Product</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col xs={6}>
+                  <img src={newProduct.imageUrl} className="card-img-top" alt="product image" />
+                </Col>
+                <Col xs={6}>
+                  <Form>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Name
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          required
+                          type="text"
+                          autoFocus
+                          value={newProduct.name}
+                          onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Detail
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={newProduct.detail}
+                          onChange={event => { setNewProduct({ ...newProduct, detail: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Image Url
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={newProduct.imageUrl}
+                          onChange={event => { setNewProduct({ ...newProduct, imageUrl: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Price
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={dupProducts.price}
+                          onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <div className='btn-group'>
+                <Button className="cancle-btn" variant="secondary" onClick={handleCloseAddModal}>
+                  Cancle
+                </Button>
+                <Button className="confirm-btn" variant="primary" onClick={handleAddProduct}>
+                  Add
+                </Button>
+              </div>
+            </Modal.Footer>
+          </Modal>
         </div>
-        <button type="button" className="btn btn-success btn-sm" onClick={() => handleAddProduct()} >
-          Add
-        </button>
-      </div>
+      )}
 
       {/*Show List of Products */}
       <div className='ListProducts-container'>
@@ -158,13 +230,13 @@ export function ShowProduct() {
                     <p className="card-text">price: {product.price}</p>
                     <div className="mt-auto">
                       <button type="button"
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm edit-btn"
                         onClick={() => { handleOpen(index), setDetail(false), handleEdit(products[index]) }}
                       >
                         Edit
                       </button>
                       <button type="button"
-                        className="btn btn-danger btn-sm"
+                        className="btn btn-danger btn-sm delete-btn"
                         onClick={() => deleteProduct(index)}>
                         delete
                       </button>
@@ -250,10 +322,10 @@ export function ShowProduct() {
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button className="cancle-btn"variant="secondary" onClick={handleClose}>
                 Cancle
               </Button>
-              <Button variant="primary" onClick={handleSave}>
+              <Button className="confirm-btn" variant="primary" onClick={handleSave}>
                 Save Changes
               </Button>
             </Modal.Footer>
