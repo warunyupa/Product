@@ -3,3 +3,16 @@
     background-color: transparent;
     color:rgb(20, 16, 43)
 }
+
+@media only screen and (max-width: 800px) {
+    .btn-group{
+        display: flex;
+        justify-content: center;
+        vertical-align:middle;
+        flex-direction: column;
+        gap: 0.5rem
+    }
+    .btn-group button{
+        width: 100px;
+    }
+}
