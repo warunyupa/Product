@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -16,71 +17,66 @@ type Product = {
   price: number
 };
 
-const intialValues = [
-  {
-    name: "Pencil 2B (50/Pack)",
-    detail: "Lead Hardness : 2B",
-    imageUrl:
-      "https://pim-cdn0.ofm.co.th/products/large/1004846.jpg",
-    price: 169,
-  },
-  {
-    name: "Copier Paper A3 80 gsm",
-    detail: "Paper Thickness : 80 gsm ,Paper Size : 297 x 420 mm. (A3),500 sheets/ream",
-    imageUrl:
-      "https://pim-cdn0.ofm.co.th/products/large/5010470.jpg",
-    price: 15,
-  },
-  {
-    name: "Louis Printed Tape Pack With LoveBrown-Cream",
-    detail: "For packaging work that wants to show love and care Brown letters with cream colored background, 3 inch tape core, Size 2 inches x 45 yards",
-    imageUrl:
-      "https://pim-cdn0.ofm.co.th/products/large/3090299.jpg",
-    price: 56,
-  },
-]
-
-{/* set initial value */ }
-const [products, setProducts] = useState<Product>();
-
 //----functions---//
-// export const AddButton = () => {
-//   setNewProduct(props.newProduct)
-//   if (newProduct.imageUrl == '') {
-//     newProduct.imageUrl = defaultImage;
-//   }
-//   if (newProduct.name == '') {
-//     alert('Please enter name product')
-//   }
-//   else {
-//     products.push(newProduct)
-//     console.log(products)
-//     setNewProduct(initProd)
-//   }
-
-//   return (
-//     <button >
-//       Add
-//     </button>
-//   )
-// };
-
 export function ShowProduct() {
+  const intialValues = [
+    {
+      name: "Pencil 2B (50/Pack)",
+      detail: "Lead Hardness : 2B",
+      imageUrl:
+        "https://pim-cdn0.ofm.co.th/products/large/1004846.jpg",
+      price: 169,
+    },
+    {
+      name: "Copier Paper A3 80 gsm",
+      detail: "Paper Thickness : 80 gsm ,Paper Size : 297 x 420 mm. (A3),500 sheets/ream",
+      imageUrl:
+        "https://pim-cdn0.ofm.co.th/products/large/5010470.jpg",
+      price: 15,
+    },
+    {
+      name: "Louis Printed Tape Pack With LoveBrown-Cream",
+      detail: "For packaging work that wants to show love and care Brown letters with cream colored background, 3 inch tape core, Size 2 inches x 45 yards",
+      imageUrl:
+        "https://pim-cdn0.ofm.co.th/products/large/3090299.jpg",
+      price: 56,
+    },
+  ]
+
+  {/* set initial value */ }
+  const [products, setProducts] = useState<Product[]>(intialValues);
 
   {/*set varible for Addding new Product*/ }
-   const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
-   const [newProduct, setNewProduct] = useState<Product>(initProd);
+  const initProd = { name: '', detail: '', imageUrl: '', price: 0 };
+  const [newProduct, setNewProduct] = useState<Product>(initProd);
 
-   {/*Flag to show/close modal */ }
-   const [show, setShow] = useState(false);
-   const [detail, setDetail] = useState(false);
-   const [indexProduct, setIndexProduct] = useState<number>()
+  {/*Flag to show/close modal */ }
+  const [show, setShow] = useState(false);
+  const [detail, setDetail] = useState(false);
+  const [indexProduct, setIndexProduct] = useState<number>()
 
-   {/*set Duplicate Products for Edit a product */ }
-   const [dupProducts, setDupProducts] = useState<Product>(initProd);
+  {/*set Duplicate Products for Edit a product */ }
+  const [dupProducts, setDupProducts] = useState<Product>(initProd);
 
-   {/*default image */ }
-   const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
+  const [addModal,setAddModal] = useState(false)
+
+  {/*default image */}
+  const defaultImage = 'https://www.nbmchealth.com/wp-content/uploads/2018/04/default-placeholder-300x300.png';
+
+  const handleAddProduct = () => {
+    if (newProduct.imageUrl == '') {
+      newProduct.imageUrl = defaultImage;
+    }
+    if (newProduct.name == '' ){
+      alert('Please enter name product')
+    }
+    else{
+      products.push(newProduct)
+      console.log(newProduct)
+      setNewProduct(initProd)
+      setAddModal(false);
+    }
+  };
 
   const deleteProduct = (index: number) => {
     setProducts((oldValues) => {
@@ -103,20 +99,15 @@ export function ShowProduct() {
     console.log('close index = ' + indexProduct)
   };
 
-  const handleAddProduct = () => {
-    if (newProduct.imageUrl == '') {
-      newProduct.imageUrl = defaultImage;
-    }
-    if (newProduct.name == '') {
-    alert('Please enter name product')
-    }
-    else {
-     products.push(newProduct)
-      console.log(newProduct)
-      setNewProduct(initProd)
-    }
-  };
-
+  const handleAddModal = ()=>{
+    setAddModal(true);
+    console.log('add modal '+ addModal)
+  }
+  
+  const handleCloseAddModal =()=>{
+    setAddModal(false)
+    setNewProduct(initProd);
+  }
   const handleEdit = (value: Product) => {
     setDupProducts(value)
     console.log(value)
@@ -125,10 +116,10 @@ export function ShowProduct() {
     if (dupProducts.imageUrl == '')
       dupProducts.imageUrl = defaultImage
 
-    if (dupProducts.name == '') {
+    if(dupProducts.name ==''){
       alert('Please enter name product')
     }
-    else {
+    else{
       setProducts((prevProducts) => {
         const updatedProducts = [...prevProducts];
         updatedProducts[indexProduct as number] = dupProducts;
@@ -140,31 +131,91 @@ export function ShowProduct() {
 
   return (
     <>
-      {/*Add Product*/}
-      <div className='card Add-container'>
-        <h2> New Product </h2>
-        <div className="row mb-3 ">
-          <label className="col-sm-2 col-form-label ">Name</label>
-          <div className="col-sm-10">
-            <input required type="text" className="form-control form-control-sm" placeholder="product name" value={newProduct.name} onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label ">Detail</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="detail" value={newProduct.detail} onChange={event => { setNewProduct({ ...newProduct, detail: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label">Image</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="image" value={newProduct.imageUrl} onChange={event => { setNewProduct({ ...newProduct, imageUrl: event.target.value }) }} />
-          </div>
-          <label className="col-sm-2 col-form-label" >Price</label>
-          <div className="col-sm-10">
-            <input type="text" className="form-control form-control-sm" placeholder="price" value={newProduct.price} onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }} />
-          </div>
+      {/*Add Product */}
+      <Button className="add-btn" onClick={handleAddModal}>Add new product</Button>
+      {addModal && (
+        <div className="overlay">
+          <Modal size="lg" show={addModal} onHide={handleCloseAddModal} >
+            <Modal.Header closeButton >
+              <Modal.Title>New Product</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Row>
+                <Col xs={6}>
+                  <img src={newProduct.imageUrl} className="card-img-top" alt="product image" />
+                </Col>
+                <Col xs={6}>
+                  <Form>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Name
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          required
+                          type="text"
+                          autoFocus
+                          value={newProduct.name}
+                          onChange={event => { setNewProduct({ ...newProduct, name: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Detail
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={newProduct.detail}
+                          onChange={event => { setNewProduct({ ...newProduct, detail: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Image Url
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={newProduct.imageUrl}
+                          onChange={event => { setNewProduct({ ...newProduct, imageUrl: event.target.value }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" >
+                      <Form.Label column sm="2">
+                        Price
+                      </Form.Label>
+                      <Col sm="10">
+                        <Form.Control
+                          type="text"
+                          autoFocus
+                          value={dupProducts.price}
+                          onChange={event => { setNewProduct({ ...newProduct, price: Number(event.target.value) }) }}
+                        />
+                      </Col>
+                    </Form.Group>
+                  </Form>
+                </Col>
+              </Row>
+            </Modal.Body>
+            <Modal.Footer>
+              <div className='btn-group'>
+                <Button className="cancle-btn" variant="secondary" onClick={handleCloseAddModal}>
+                  Cancle
+                </Button>
+                <Button className="confirm-btn" variant="primary" onClick={handleAddProduct}>
+                  Add
+                </Button>
+              </div>
+            </Modal.Footer>
+          </Modal>
         </div>
-        <button type="button" className="btn btn-success btn-sm" onClick={() => handleAddProduct()} >
-          Add
-        </button>
-      </div>
+      )}
 
       {/*Show List of Products */}
       <div className='ListProducts-container'>
@@ -177,15 +228,15 @@ export function ShowProduct() {
                   <div className="card-body d-flex flex-column">
                     <button className="product-btn" onClick={() => { handleOpen(index), setDetail(true) }}><h5 className="card-title">{product.name}</h5></button>
                     <p className="card-text">price: {product.price}</p>
-                    <div className="mt-auto btn-group">
+                    <div className="mt-auto">
                       <button type="button"
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-primary btn-sm edit-btn"
                         onClick={() => { handleOpen(index), setDetail(false), handleEdit(products[index]) }}
                       >
                         Edit
                       </button>
                       <button type="button"
-                        className="btn btn-danger btn-sm"
+                        className="btn btn-danger btn-sm delete-btn"
                         onClick={() => deleteProduct(index)}>
                         delete
                       </button>
@@ -271,10 +322,10 @@ export function ShowProduct() {
               </Row>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button className="cancle-btn"variant="secondary" onClick={handleClose}>
                 Cancle
               </Button>
-              <Button variant="primary" onClick={handleSave}>
+              <Button className="confirm-btn" variant="primary" onClick={handleSave}>
                 Save Changes
               </Button>
             </Modal.Footer>
